@@ -45,7 +45,7 @@ public class ApplicationConfigurationTests {
         ResponseEntity<String> entity = restTemplate
                 .getForEntity("http://localhost:" + this.port + "/", String.class);
         assertEquals(HttpStatus.OK, entity.getStatusCode());
-        assertEquals("Hello World!", entity.getBody());
+        assertEquals("Hello Alfa!", entity.getBody());
     }
 
 }
