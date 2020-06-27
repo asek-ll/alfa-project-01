@@ -28,6 +28,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.alfabattle.contest.project.view.BranchView;
+import ru.alfabattle.contest.project.view.BranchWithDistanceView;
+import ru.alfabattle.contest.project.view.StatusView;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -41,11 +44,31 @@ public class ApplicationConfigurationTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testGreeting() throws Exception {
-        ResponseEntity<String> entity = restTemplate
-                .getForEntity("http://localhost:" + this.port + "/", String.class);
+    public void branchesCanBeFetchet() throws Exception {
+        ResponseEntity<BranchView> entity = restTemplate
+                .getForEntity("http://localhost:" + this.port + "/branches/612", BranchView.class);
+
         assertEquals(HttpStatus.OK, entity.getStatusCode());
-        assertEquals("Hello Alfa!", entity.getBody());
+        BranchView branch = entity.getBody();
+        assertEquals(612, (long) branch.getId());
+    }
+
+    @Test
+    public void whenBranchNotFoundShouldReturn404() throws Exception {
+        ResponseEntity<StatusView> entity = restTemplate
+                .getForEntity("http://localhost:" + this.port + "/branches/1", StatusView.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        assertEquals("branch not found", entity.getBody().getStatus());
+    }
+
+    @Test
+    public void closesBranchesCanBeFoundedByLatLon() throws Exception {
+        ResponseEntity<BranchWithDistanceView> entity = restTemplate
+                .getForEntity("http://localhost:" + this.port + "/branches/?lat=55.773284&lon=37.624125", BranchWithDistanceView.class);
+
+        assertEquals(HttpStatus.OK, entity.getStatusCode());
+        assertEquals(430, (long) entity.getBody().getDistance());
     }
 
 }
