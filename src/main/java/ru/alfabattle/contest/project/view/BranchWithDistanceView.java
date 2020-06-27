@@ -1,7 +1,6 @@
 package ru.alfabattle.contest.project.view;
 
 import ru.alfabattle.contest.project.entity.Branch;
-import ru.alfabattle.contest.project.view.BranchView;
 
 public class BranchWithDistanceView extends BranchView {
     private Long distance;

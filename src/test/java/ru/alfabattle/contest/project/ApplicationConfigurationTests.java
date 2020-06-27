@@ -30,6 +30,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.alfabattle.contest.project.view.BranchView;
 import ru.alfabattle.contest.project.view.BranchWithDistanceView;
+import ru.alfabattle.contest.project.view.PredictionView;
 import ru.alfabattle.contest.project.view.StatusView;
 
 @RunWith(SpringRunner.class)
@@ -69,6 +70,18 @@ public class ApplicationConfigurationTests {
 
         assertEquals(HttpStatus.OK, entity.getStatusCode());
         assertEquals(430, (long) entity.getBody().getDistance());
+    }
+
+    @Test
+    public void branchCustomerWaitCanBePredicted() throws Exception {
+        ResponseEntity<PredictionView> entity = restTemplate
+                .getForEntity("http://localhost:" + this.port + "/branches/612/predict?dayOfWeek=1&hourOfDay=14", PredictionView.class);
+
+        assertEquals(HttpStatus.OK, entity.getStatusCode());
+        PredictionView predictionView = entity.getBody();
+        assertEquals(1, predictionView.getDayOfWeek());
+        assertEquals(14, predictionView.getHourOfDay());
+        assertEquals(117L, predictionView.getPredicting());
     }
 
 }
